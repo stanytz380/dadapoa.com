@@ -1,62 +1,33 @@
 <?php
 require_once '../includes/config.php';
 require_once '../includes/firebase_rest.php';
-require_once '../includes/functions.php';
+if (!isset($_SESSION['uid']) || $_SESSION['account_type'] !== 'admin') redirect('../login.php');
 
-if (!isset($_SESSION['uid']) || $_SESSION['account_type'] !== 'admin') {
-    redirect('../login.php');
-}
-
-// Fetch service accounts with approved = false
-$pending = [];
-$queryResult = firestore_query_collection('users');
-if ($queryResult) {
-    foreach ($queryResult as $doc) {
-        if (isset($doc['document'])) {
-            $fields = $doc['document']['fields'];
-            if ($fields['account_type']['stringValue'] == 'service' && $fields['approved']['booleanValue'] == false) {
-                $pending[] = [
-                    'uid' => basename($doc['document']['name']),
-                    'nickname' => $fields['nickname']['stringValue'],
-                    'email' => $fields['email']['stringValue'],
-                ];
-            }
-        }
-    }
-}
+$total_users = count(firestore_query_collection('users'));
+$total_videos = count(firestore_query_collection('videos'));
+$total_groups = count(firestore_query_collection('groups'));
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin - Dadapoa</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Admin Panel - Dadapoa</title>
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
 <div class="wrapper">
     <h1>Admin Dashboard</h1>
-    <h2>Service Accounts Pending Approval</h2>
-    <?php if (count($pending) == 0): ?>
-        <p>Hakuna watoa huduma wanaosubiri kwa sasa.</p>
-    <?php else: ?>
-        <table border="1" cellpadding="10">
-            <table>
-                <th>Nickname</th><th>Email</th><th>Action</th>
-            </tr>
-            <?php foreach ($pending as $p): ?>
-            <tr>
-                </table><?php echo $p['nickname']; ?></td>
-                <td><?php echo $p['email']; ?></td>
-                <td>
-                    <a href="approve_provider.php?uid=<?php echo $p['uid']; ?>" class="premium-btn">Approve</a>
-                    <a href="ban_provider.php?uid=<?php echo $p['uid']; ?>" style="color:red;">Ban</a>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-    <?php endif; ?>
+    <div class="stats">
+        <p>Total Users: <?php echo $total_users; ?></p>
+        <p>Total Videos: <?php echo $total_videos; ?></p>
+        <p>Total Groups: <?php echo $total_groups; ?></p>
+    </div>
+    <nav>
+        <a href="manage_users.php">Manage Users (Ban/Blue Tick)</a>
+        <a href="manage_videos.php">Manage Videos</a>
+        <a href="manage_groups.php">Manage Groups</a>
+        <a href="approve_providers.php">Approve Providers</a>
+    </nav>
     <p><a href="../logout.php">Logout</a></p>
 </div>
-<script src="../assets/js/main.js"></script>
 </body>
 </html>
