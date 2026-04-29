@@ -1,7 +1,7 @@
 <?php
 // Replace with your actual data
-define('FIREBASE_API_KEY', 'AIzaSyCxxxxxxxxxxxxxxxxxxxxx');
-define('FIREBASE_PROJECT_ID', 'dadapoa-xxxxx');
+define('FIREBASE_API_KEY', 'AIzaSyBhF_jesV0dMhy3cEgehrWlT_mZOtKXySE');
+define('FIREBASE_PROJECT_ID', 'stanytechzone');
 define('PETERPAY_MERCHANT_ID', 'MP123456');
 define('PETERPAY_API_KEY', 'pp_live_xxxxxxxxxxxxxx');
 define('PETERPAY_CALLBACK_URL', 'https://yourdomain.com/peterpay_callback.php');
